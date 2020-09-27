@@ -28,19 +28,23 @@ from pymodbus.pdu import ModbusRequest
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from pymodbus.transaction import ModbusRtuFramer
 import time
+import logging
+
+#logging.basicConfig()
+#log = logging.getLogger()
+#log.setLevel(logging.DEBUG)
 
 # Symbol to display Celcius
 degree_sign = u"\N{DEGREE SIGN}"
 
 # Modbus master serial port device (this should be connected to the slave device serial port)
-#port = '/dev/ttyS0'
-
+port = 'COM9'
 # Serial baudrate which matches to Modbus slave (sensor device)
 baudrate = 115200
 
 client = ModbusClient(
   method = 'rtu'
-  ,port='/dev/ttyS0'
+  ,port='COM9'
   ,baudrate=baudrate
   ,parity = 'O'
   ,timeout=1
@@ -54,21 +58,28 @@ interation = 0
 while True:
     interation = interation + 1
     
-    registers  = client.read_holding_registers(0x0000,2,unit=1)# start_address, count, slave_id
+    registers  = client.read_input_registers(0x0000,2,unit=1)# start_address, count, slave_id
     
-    # Read temperature from first register and divide the value by 100 for celcius format
-    temperature = registers.registers[0]/float(100)
+    if not registers.isError():
+      # Read temperature from first register and divide the value by 100 for celcius format
+      temperature = registers.registers[0]/float(100)
     
-    # Read Humidity from second register and divide the value by 100 for RH format
-    humidity = registers.registers[1]/float(100)
+      # Read Humidity from second register and divide the value by 100 for RH format
+      humidity = registers.registers[1]/float(100)
     
-    # Print values onto Terminal
+      # Print values onto Terminal
     
-    iteration_str = "Interation" + str(interation)
-    temperature_str = "Temperatute = " + str(temperature) + degree_sign + 'C'
-    humidity_str = "Humidity = " + str(humidity) + " RH"
+      iteration_str = "Interation" + str(interation)
+      temperature_str = "Temperatute = " + str(temperature) + degree_sign + 'C'
+      humidity_str = "Humidity = " + str(humidity) + " RH"
     
-    print(iteration_str + ": " + temperature_str + ", "+ humidity_str)
+      print(iteration_str + ": " + temperature_str + ", "+ humidity_str)
     
-    # Delay for 3 seconds for next read
+    else:
+      # Do stuff to error handling.
+      print('Error message: {}'.format(registers))
+      # Delay for 3 seconds for next read
+    
+    print("Error")
+
     time.sleep(3)
