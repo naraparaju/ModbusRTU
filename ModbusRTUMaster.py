@@ -78,8 +78,6 @@ while True:
     else:
       # Do stuff to error handling.
       print('Error message: {}'.format(registers))
-      # Delay for 3 seconds for next read
     
-    print("Error")
-
+    # Delay for 3 seconds for next read
     time.sleep(3)
