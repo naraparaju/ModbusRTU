@@ -1,0 +1,6 @@
+
+#Use following command to save docker image
+sudo docker save mod/modbus-test-alpine > modbus-test-alpine.tar
+
+#use folloing command to run the docker file
+docker run --privileged mod/modbus-test-alpine
