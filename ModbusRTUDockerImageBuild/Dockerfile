@@ -15,4 +15,5 @@ RUN pip3 install -r requirements.txt
 COPY ./ModbusRTUMaster.py /app
 
 # command to run on container start
-CMD [ "python3", "-u", "./ModbusRTUMaster.py" ]
+#CMD [ "python3", "-u", "./ModbusRTUMaster.py", "port")
+ENTRYPOINT  ["python3", "-u", "./ModbusRTUMaster.py"]
